@@ -252,9 +252,8 @@ impl<K: IntKey, V> IntMap<K, V> {
 
         let vals = &mut self.cache[ix];
 
-        return vals
-            .iter_mut()
-            .find_map(|kv| (kv.0.into_int() == k).then(move || &mut kv.1));
+        vals.iter_mut()
+            .find_map(|kv| (kv.0.into_int() == k).then(move || &mut kv.1))
     }
 
     /// Removes the value for given key from the [`IntMap`] and returns it.
@@ -388,27 +387,27 @@ impl<K: IntKey, V> IntMap<K, V> {
     //**** Iterators *****
 
     /// Returns an [`Iterator`] over all key/value pairs.
-    pub fn iter(&self) -> Iter<K, V> {
+    pub fn iter(&self) -> Iter<'_, K, V> {
         Iter::new(&self.cache)
     }
 
     /// Returns an [`Iterator`] over all key/value pairs with mutable value.
-    pub fn iter_mut(&mut self) -> IterMut<K, V> {
+    pub fn iter_mut(&mut self) -> IterMut<'_, K, V> {
         IterMut::new(&mut self.cache)
     }
 
     /// Returns an [`Iterator`] over all keys.
-    pub fn keys(&self) -> Keys<K, V> {
+    pub fn keys(&self) -> Keys<'_, K, V> {
         Keys { inner: self.iter() }
     }
 
     /// Returns an [`Iterator`] over all values.
-    pub fn values(&self) -> Values<K, V> {
+    pub fn values(&self) -> Values<'_, K, V> {
         Values { inner: self.iter() }
     }
 
     /// Returns an [`Iterator`] over all mutable values.
-    pub fn values_mut(&mut self) -> ValuesMut<K, V> {
+    pub fn values_mut(&mut self) -> ValuesMut<'_, K, V> {
         ValuesMut {
             inner: self.iter_mut(),
         }
@@ -419,7 +418,7 @@ impl<K: IntKey, V> IntMap<K, V> {
     ///
     /// If the [`Iterator`] is droppend then all remaining key/value pairs will be removed from
     /// the [`IntMap`].
-    pub fn drain(&mut self) -> Drain<K, V> {
+    pub fn drain(&mut self) -> Drain<'_, K, V> {
         Drain::new(&mut self.cache, &mut self.count)
     }
 
@@ -573,7 +572,7 @@ impl<K: IntKey, V> IntMap<K, V> {
     /// assert_eq!(counters.get(50), Some(&3));
     /// assert_eq!(counters.get(60), Some(&1));
     /// ```
-    pub fn entry(&mut self, key: K) -> Entry<K, V> {
+    pub fn entry(&mut self, key: K) -> Entry<'_, K, V> {
         Entry::new(key, self)
     }
 }
