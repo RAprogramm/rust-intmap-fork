@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [3.1.3] 2025-10-26
+### Chore
+- Fix lifetime warning introduced in rust 1.89
+
 ## [3.1.2] 2025-07-03
 ### Added
 - Allow to use for on references to IntMap
